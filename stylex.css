@@ -1,0 +1,455 @@
+/* Minimal modern reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ===============================
+   GLOBAL VARIABLES
+   =============================== */
+:root {
+  /* COLORS — Light Mode */
+  --color-bg: #ffff;
+  --color-surface: #e1dcd1;
+  --color-text-muted: #6b7280;
+  --color-primary: #4d416c;
+  --color-primary-10: rgba(37, 99, 235, 0.1);
+  --color-primary-20: rgba(37, 99, 235, 0.2);
+
+  --color-secondary: #facdad;
+  --color-primary-hover: #1d4ed8;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --color-border: #e5e7eb;
+  --color-text: var(--color-primary);
+
+  /* SHADOWS & RADIUS */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+
+  /* FONT */
+  /* --font-family: "Inter", "Poppins", "Segoe UI", Roboto, sans-serif; */
+  --font-family: "Roboto Slab", serif;
+
+  --font-size-base: 16px;
+  --font-size-sm: 12px;
+  --font-size-lg: 18px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  /* TRANSITIONS */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-medium: 0.3s ease-in-out;
+
+  /* SPACING */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  color: inherit;
+  margin: 0;
+  font-weight: 500;
+}
+h1 {
+  font-size: 60px; /* ~40px */
+}
+
+h2 {
+  font-size: 2rem; /* ~32px */
+}
+
+h3 {
+  font-size: 1.75rem; /* ~28px */
+}
+
+h4 {
+  font-size: 1.5rem; /* ~24px */
+}
+
+h5 {
+  font-size: 1.25rem; /* ~20px */
+}
+
+h6 {
+  font-size: 1rem; /* ~16px */
+}
+
+p,
+a {
+  font-weight: 400;
+}
+
+/* ===============================
+   DARK MODE
+   (uses prefers-color-scheme or manual .dark class)
+   =============================== */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-danger: #f87171;
+    --color-success: #22c55e;
+    --color-border: #334155;
+  }
+} */
+
+/* OPTIONAL: if you want manual toggle */
+.dark {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-danger: #f87171;
+  --color-success: #22c55e;
+  --color-border: #334155;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  color: var(--color-text);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px; /* adjust if needed */
+  line-height: 1.4;
+  background: var(--color-surface);
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-family);
+}
+
+.todo-app-wrapper {
+  width: 500px;
+  background-color: var(--color-bg);
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 950px;
+  height: 100%;
+  position: relative; /* make this the positioning parent */
+  overflow: hidden; /* optional: prevent overflow if needed */
+  position: relative;
+}
+
+#add-task {
+  background-color: var(--color-primary);
+  padding: 20px;
+  border: none;
+  border-radius: 50px;
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+  cursor: pointer;
+}
+
+#add-task img {
+  display: flex;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: space-between; /* Distribute space between items */
+  align-items: center; /* Align items vertically */
+}
+.d-none {
+  display: none !important;
+}
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+.category-item.active {
+  background-color: white;
+  color: red;
+}
+
+.btn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 400;
+  /* transition: var(--transition-medium); */
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+.empty-category-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  height: 80%;
+}
+
+.tab-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid #b5aee4;
+  border-radius: 6px;
+  background: white;
+  color: #7b719e;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+}
+
+/* Tab */
+.tab.active {
+  color: #3a2c80;
+  border-color: #3a2c80;
+}
+
+.tab:hover {
+  background: #f8f7ff;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c3bddc;
+}
+
+.dot.active {
+  background: #f6b89e;
+}
+/* Tab End */
+.list-container {
+  height: 550px;
+  overflow-y: auto; /* enables vertical scrolling */
+  overflow-x: hidden; /* hides any horizontal scroll */
+  scrollbar-width: thin; /* (optional) thinner scrollbar for Firefox */
+}
+
+.task-checkbox {
+  appearance: none; /* remove default checkbox look */
+  -webkit-appearance: none; /* Safari support */
+  -moz-appearance: none; /* Firefox support */
+  width: 25px;
+  height: 25px;
+  border: 1px solid var(--color-primary);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.task-checkbox:hover {
+  background-color: var(--color-primary-10);
+}
+.task-checkbox:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.task-checkbox:checked::after {
+  content: "✔";
+  position: absolute;
+  top: 1px;
+  left: 5px;
+  color: white;
+  font-size: 16px;
+  line-height: 22px;
+}
+#task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.task-item {
+  padding: 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-primary-20);
+}
+
+.task {
+  font-size: 20px;
+}
+.editing-task-input {
+  font-size: 20px;
+  font-family: var(--font-family);
+  border: none;
+  background-color: var(--color-primary-10);
+  color: blue;
+}
+.editing-task-input:focus {
+  outline: none; /* ✅ removes blue border on focus */
+}
+.task-item-wrapper {
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-btn {
+  font-size: var(--font-size-sm);
+  padding: 10px;
+  cursor: pointer;
+}
+
+.todo-input,
+.todo-input-task {
+  padding: 20px 20px;
+  width: 100%;
+  font-family: var(--font-family);
+  background-color: var(--color-primary-10);
+  border: none;
+  border-radius: 10px;
+}
+
+.validation-warning {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+.todo-input:focus,
+.todo-input-task:focus {
+  outline: none;
+}
+
+/* Overlay (background) */
+.modal-overlay,
+.modal-task-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Modal box */
+.modal {
+  background: var(--clr-surface, #fff);
+  color: var(--clr-text, #222);
+  padding: 2rem;
+  border-radius: 12px;
+  width: min(90%, 400px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease;
+  flex-direction: column;
+  align-items: normal;
+  gap: 20px;
+}
+.modal-header {
+  color: var(--color-primary);
+}
+.empty-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.modal-footer {
+  justify-content: flex-end;
+}
+
+.category-wrapper {
+  background-color: var(--color-primary);
+  position: absolute;
+  top: 0;
+  right: -100%; /* start hidden offscreen to the right */
+  width: 90%; /* adjust sidebar width */
+  height: calc(100% + 40px); /* fill parent height, compensate padding */
+  margin: -20px;
+  padding: 10px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: right 0.3s ease-in-out; /* smooth slide animation */
+}
+.category-wrapper.active {
+  right: 0;
+}
+.toggleCategory {
+  display: flex;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#toggleCategoryBtn {
+  padding: 10px;
+}
+
+.title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 10px 0;
+  margin-bottom: 2rem;
+}
+
+.title-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 90%;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

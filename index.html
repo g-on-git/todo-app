@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/stylex.css" />
+  </head>
+  <body>
+    <div class="todo-app-wrapper">
+      <div class="empty-category-container">
+        <img src="assets/emptylist.svg" alt="" class="empty-svg" />
+        <div class="empty-title">
+          <h2>No Categories Yet</h2>
+          <p>Create a category to organize your tasks better.</p>
+          <div>
+            <button id="add-category-btn" class="btn">Add Category</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="category-wrapper">
+          <div>
+            <!-- <input id="input-category" type="text" /> -->
+            <ul class="categories"></ul>
+            <!-- <button id="add-category-btn">Add category</button> -->
+               <div>
+            <button  class="btn side-category-btn">Add Category</button>
+          </div>
+          </div>
+        </div>
+        <div class="task-wrapper d-none">
+          <div class="toggleCategory">
+
+            <div class="d-flex" style="cursor: pointer;"><a id="toggleCategoryBtn">Category</a><img src="/assets/chevron-right.svg" alt=""></div>
+          </div>
+          <div class="title-wrapper">
+            <h1 class="category-title"></h1>
+<img src="/assets/edit-2.svg" alt="">
+          </div>
+
+          <button id="add-task"><img src="/assets/plus.svg" alt=""></button>
+
+
+   <div class="tab-container">
+  <button class="tab active">
+    <span class="dot active"></span>
+    Tasks
+  </button>
+  <button class="tab">
+    <span class="dot"></span>
+    Completed
+  </button>
+</div>
+
+<div class="list-container">
+  <ul id="task-list"></ul>
+
+</div>
+
+        </div>
+        <div class="empty-task-container d-none">
+          <h5>No tasks in this category, add some</h5>
+  
+      </div>
+    </div>
+
+    <!-- Modal for adding category-->
+    <div class="modal-overlay d-none" id="categoryModal">
+      <div class="modal d-flex">
+        <div class="modal-header">
+          <h5>Add Category Title</h5>
+        </div>
+
+        <div class="modal-body">
+          <input
+            type="text"
+            class="todo-input"
+            id="input-category"
+            placeholder="add here"
+          />
+          <span class="validation-warning d-none" id="validation-warning">
+            Category name is required
+          </span>
+        </div>
+
+        <div class="modal-footer d-flex">
+          <button class="btn cancel-btn" id="cancelModal">Cancel</button>
+          <button class="btn confirm-btn">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+        <!-- Modal for adding task -->
+    <div class="modal-task-overlay d-none" id="taskModal">
+      <div class="modal d-flex">
+        <div class="modal-header">
+          <h5>Add Task</h5>
+        </div>
+
+        <div class="modal-body">
+          <input
+            type="text"
+            class="todo-input-task"
+            id="input-task"
+            placeholder="add here"
+          />
+          <span class="validation-warning d-none" id="validation-warning-task">
+            Category name is required
+          </span>
+        </div>
+
+        <div class="modal-footer d-flex">
+          <button class="btn cancel-btn" id="cancelModalTask">Cancel</button>
+          <button class="btn confirm-task-btn">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/index.js"></script>
+  </body>
+</html>
