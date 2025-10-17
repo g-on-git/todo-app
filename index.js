@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const emptyCategory = document.querySelector(".empty-category-container");
   const emptyTask = document.querySelector(".empty-task-container");
 
-  const containerTodo = document.querySelector(".container");
-
   const modalOverlay = document.getElementById("categoryModal");
   const cancelModalBtn = document.getElementById("cancelModal");
   const confimBtn = document.querySelector(".confirm-btn");
@@ -26,34 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputTask = document.querySelector(".todo-input-task");
 
   const toggleBtn = document.getElementById("toggleCategoryBtn");
+  const closeCategoryBtn = document.querySelector(".closeCatBtn");
   const categoryWrapper = document.querySelector(".category-wrapper");
   const categoryTitle = document.querySelector(".category-title");
   const taskWrapper = document.querySelector(".task-wrapper");
 
   const sideAddCat = document.querySelector(".side-category-btn");
+
+  const tabButtons = document.querySelectorAll(".tab");
   // data-
 
-  let todo = {
-    // Work: [
-    //   {
-    //     id: 0,
-    //     task: "Send Email",
-    //     completed: false,
-    //   },
-    //   {
-    //     id: 1,
-    //     task: "Finish report",
-    //     completed: true,
-    //   },
-    // ],
-    // Personal: [
-    //   {
-    //     id: 0,
-    //     task: "Buy Groceries",
-    //     completed: true,
-    //   },
-    // ],
-  };
+  let todo = {};
+  let activeTab = "tasks";
 
   activeCategory = Object.keys(todo || {})[0] ?? null;
 
@@ -80,14 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
       emptyCategory.classList.add("d-none");
       taskWrapper.classList.remove("d-none");
     }
-    // ✅ Show/hide "no category" message
-    // if (categoryKeys.length === 0) {
-    //   emptyCategory.style.display = "block";
-    //   containerTodo.style.display = "none";
-    // } else {
-    //   emptyCategory.style.display = "none";
-    //   containerTodo.style.display = "block";
-    // }
+
     if (!activeCategory && categoryKeys.length > 0) {
       activeCategory = categoryKeys[0]; // ✅ Default to first category
     }
@@ -274,65 +249,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderTasks = () => {
     taskList.innerHTML = "";
-    if (!activeCategory || !todo[activeCategory]) {
-      return;
-    }
 
-    const categoryTask = todo[activeCategory];
-    emptyTask.style.display = categoryTask.length === 0 ? "block" : "none";
+    if (!activeCategory || !todo[activeCategory]) return;
 
-    categoryTask.forEach((e) => {
+    // Show or hide empty message
+    const categoryTasks = todo[activeCategory];
+    const filteredTasks =
+      activeTab === "tasks"
+        ? categoryTasks.filter((t) => !t.completed)
+        : categoryTasks.filter((t) => t.completed);
+
+    emptyTask.style.display = filteredTasks.length === 0 ? "block" : "none";
+
+    filteredTasks.forEach((task) => {
       const li = document.createElement("li");
-      li.dataset.id = e.id;
+      li.dataset.id = task.id;
       li.classList.add("task-item");
 
-      // ✅ Include checkbox before the task text
       li.innerHTML = `
       <div class="task-item-wrapper">
         <input type="checkbox" class="task-checkbox" ${
-          e.completed ? "checked" : ""
+          task.completed ? "checked" : ""
         }>
-        <span class="task ${e.completed ? "completed" : ""}">${e.task}</span>
+        <span class="task ${task.completed ? "completed" : ""}">${
+        task.task
+      }</span>
       </div>
       <div>
-        <button class="delete-btn d-none">Delete</button>
+        <button class="delete-btn ">Delete</button>
         <a class="edit-btn">Edit</a>
       </div>
     `;
 
-      // 🗑️ Delete task
+      // 🗑️ Delete
       li.querySelector(".delete-btn").addEventListener("click", () => {
         todo[activeCategory] = todo[activeCategory].filter(
-          (task) => task.id !== parseInt(li.dataset.id)
+          (t) => t.id !== parseInt(li.dataset.id)
         );
         saveLocal();
         renderTasks();
       });
 
-      // ✏️ Edit task
+      // ✏️ Edit
       li.querySelector(".edit-btn").addEventListener("click", (e) => {
         const btn = e.target;
         if (btn.textContent === "Edit") {
           btn.textContent = "Save";
           const span = li.querySelector(".task");
-          const newInput = document.createElement("input");
-          newInput.classList.add("editing-task-input");
-          newInput.type = "text";
-          newInput.value = span.textContent;
-          span.replaceWith(newInput);
-        } else if (btn.textContent === "Save") {
-          btn.textContent = "Edit"; // fixed to go back to Edit
+          const input = document.createElement("input");
+          input.classList.add("editing-task-input");
+          input.type = "text";
+          input.value = span.textContent;
+          span.replaceWith(input);
+        } else {
+          btn.textContent = "Edit";
           const input = li.querySelector("input[type='text']");
           const span = document.createElement("span");
           span.classList.add("task");
           span.textContent = input.value;
           input.replaceWith(span);
 
-          const task = todo[activeCategory].find(
-            (task) => task.id === parseInt(li.dataset.id)
+          const existing = todo[activeCategory].find(
+            (t) => t.id === parseInt(li.dataset.id)
           );
-          if (task) {
-            task.task = span.textContent;
+          if (existing) {
+            existing.task = span.textContent;
             saveLocal();
             renderTasks();
           }
@@ -342,20 +323,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // ✅ Checkbox toggle completion
       li.querySelector(".task-checkbox").addEventListener("change", (e) => {
         const checked = e.target.checked;
-        const taskId = parseInt(li.dataset.id);
-        const task = todo[activeCategory].find((t) => t.id === taskId);
+        const id = parseInt(li.dataset.id);
+        const currentTask = todo[activeCategory].find((t) => t.id === id);
 
-        if (task) {
-          task.completed = checked;
+        if (currentTask) {
+          currentTask.completed = checked;
           saveLocal();
         }
 
-        const taskSpan = li.querySelector(".task");
-        if (checked) {
-          taskSpan.classList.add("completed");
-        } else {
-          taskSpan.classList.remove("completed");
-        }
+        // Re-render to move between tabs automatically
+        renderTasks();
       });
 
       taskList.appendChild(li);
@@ -436,7 +413,29 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleBtn.addEventListener("click", () => {
     categoryWrapper.classList.toggle("active");
   });
+  closeCategoryBtn.addEventListener("click", () => {
+    categoryWrapper.classList.remove("active");
+  });
 
+  tabButtons.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+      // Remove 'active' class from all tabs
+      tabButtons.forEach((t) => t.classList.remove("active"));
+      tabButtons.forEach((t) =>
+        t.querySelector(".dot").classList.remove("active")
+      );
+
+      // Set active state
+      tab.classList.add("active");
+      tab.querySelector(".dot").classList.add("active");
+
+      // Set current tab type
+      activeTab = index === 0 ? "tasks" : "completed";
+
+      // Re-render tasks
+      renderTasks();
+    });
+  });
   function generateGlobalId() {
     let maxId = 0;
     for (const cat in todo) {

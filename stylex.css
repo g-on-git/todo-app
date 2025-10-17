@@ -96,24 +96,6 @@ a {
   font-weight: 400;
 }
 
-/* ===============================
-   DARK MODE
-   (uses prefers-color-scheme or manual .dark class)
-   =============================== */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f172a;
-    --color-surface: #1e293b;
-    --color-text: #f1f5f9;
-    --color-text-muted: #94a3b8;
-    --color-primary: #3b82f6;
-    --color-primary-hover: #2563eb;
-    --color-danger: #f87171;
-    --color-success: #22c55e;
-    --color-border: #334155;
-  }
-} */
-
 /* OPTIONAL: if you want manual toggle */
 .dark {
   --color-bg: #0f172a;
@@ -126,7 +108,9 @@ a {
   --color-success: #22c55e;
   --color-border: #334155;
 }
-
+html {
+  padding: 20px !important;
+}
 html,
 body,
 #root {
@@ -161,14 +145,94 @@ body {
   position: relative;
 }
 
+/* The main content area (category, title, tabs, list, footer) */
+.task-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.toggleCategory {
+  display: flex;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#toggleCategoryBtn {
+  padding: 10px;
+}
+
+.title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 10px 0;
+  margin-bottom: 2rem;
+}
+
+.tab-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid #b5aee4;
+  border-radius: 6px;
+  background: white;
+  color: #7b719e;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+}
+
+/* Tab */
+.tab.active {
+  color: #3a2c80;
+  border-color: #3a2c80;
+}
+
+.tab:hover {
+  background: #f8f7ff;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c3bddc;
+}
+
+.dot.active {
+  background: #f6b89e;
+}
+
+.list-container {
+  display: block;
+  /* min-height: 300px;
+  max-height: 550px; */
+  overflow-y: auto; /* enables vertical scrolling */
+  overflow-x: hidden; /* hides any horizontal scroll */
+  scrollbar-width: thin; /* (optional) thinner scrollbar for Firefox */
+}
+
 #add-task {
   background-color: var(--color-primary);
   padding: 20px;
   border: none;
   border-radius: 50px;
-  position: absolute;
+  /* position: absolute;
   bottom: 3rem;
-  right: 3rem;
+  right: 3rem; */
   cursor: pointer;
 }
 
@@ -219,54 +283,15 @@ body {
   height: 80%;
 }
 
-.tab-container {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px;
-  border: 1px solid #b5aee4;
-  border-radius: 6px;
-  background: white;
-  color: #7b719e;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: var(--font-family);
-}
-
-/* Tab */
-.tab.active {
-  color: #3a2c80;
-  border-color: #3a2c80;
-}
-
-.tab:hover {
-  background: #f8f7ff;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #c3bddc;
-}
-
-.dot.active {
-  background: #f6b89e;
-}
 /* Tab End */
-.list-container {
-  height: 550px;
-  overflow-y: auto; /* enables vertical scrolling */
-  overflow-x: hidden; /* hides any horizontal scroll */
-  scrollbar-width: thin; /* (optional) thinner scrollbar for Firefox */
+
+.footer {
+  padding: 10px 0;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .task-checkbox {
@@ -303,6 +328,8 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: block; /* ensure ul behaves as a block */
+  height: auto;
 }
 .task-item {
   padding: 24px 20px;
@@ -402,34 +429,17 @@ body {
   width: 90%; /* adjust sidebar width */
   height: calc(100% + 40px); /* fill parent height, compensate padding */
   margin: -20px;
-  padding: 10px;
+  padding: 50px 40px 50px 20px;
   z-index: 900;
-  display: flex;
+  border-radius: 46px;
+
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   transition: right 0.3s ease-in-out; /* smooth slide animation */
 }
 .category-wrapper.active {
   right: 0;
-}
-.toggleCategory {
-  display: flex;
-  padding: 10px 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-#toggleCategoryBtn {
-  padding: 10px;
-}
-
-.title-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  padding: 10px 0;
-  margin-bottom: 2rem;
 }
 
 .title-wrapper::after {
