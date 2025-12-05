@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       li.classList.add("category-item");
       li.innerHTML = `
         <span class="category">${cat}</span>
-        <img class="delete-btn" src="/assets/trash.svg" alt="Delete">
+        <img class="delete-btn" src="assets/trash.svg" alt="Delete">
       `;
 
       li.querySelector(".delete-btn").addEventListener("click", (e) => {
@@ -140,8 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="d-flex">
           
-           <img class="delete-btn" src="/assets/trash_black.svg" alt="Delete">
-            <img class="edit-btn" data-state="Edit" src="/assets/editTask.svg" alt="" />
+           <img class="delete-btn" src="assets/trash_black.svg" alt="Delete">
+            <img class="edit-btn" data-state="Edit" src="assets/editTask.svg" alt="" />
           
         </div>
       `;
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (editBtn.dataset.state === "Edit") {
           editBtn.dataset.state = "save";
           console.log(editBtn.src);
-          editBtn.src = "/assets/check.svg";
+          editBtn.src = "assets/check.svg";
           const span = li.querySelector(".task");
           const input = document.createElement("input");
           input.type = "text";
@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           // editBtn.textContent = "Edit";
           editBtn.dataset.state = "Edit";
-          editBtn.scr = "/assets/editTask.svg";
+          editBtn.scr = "assets/editTask.svg";
           const input = li.querySelector("input[type='text']");
           const span = document.createElement("span");
           span.classList.add("task");
