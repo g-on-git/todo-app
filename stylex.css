@@ -132,6 +132,11 @@ body {
   align-items: center;
   font-family: var(--font-family);
 }
+ul {
+  list-style: none; /* removes bullets */
+  margin: 0; /* removes default margin */
+  padding: 0; /* removes default padding */
+}
 
 .todo-app-wrapper {
   width: 500px;
@@ -223,6 +228,13 @@ body {
   overflow-y: auto; /* enables vertical scrolling */
   overflow-x: hidden; /* hides any horizontal scroll */
   scrollbar-width: thin; /* (optional) thinner scrollbar for Firefox */
+  height: 100%;
+}
+
+.tasksIsEmpty {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 #add-task {
@@ -252,9 +264,47 @@ body {
   text-decoration: line-through;
   color: gray;
 }
+.category-item {
+  color: white;
+  padding: 10px 40px;
+  position: relative;
+  cursor: pointer;
+
+  display: flex; /* set flex ON all the time */
+  gap: 12px; /* keep gap consistent */
+
+  /* smooth transitions for size, padding */
+  transition: font-size 0.2s ease, padding 0.2s ease;
+}
+.category-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  width: 0;
+  background: white;
+  transition: width 1s ease; /* animation of underline */
+}
+/* Animate underline from RIGHT → LEFT */
+.category-item.active::after {
+  width: 100%; /* line grows to full width */
+}
+.category-item .delete-btn {
+  opacity: 0;
+  pointer-events: none;
+  width: 1rem;
+}
+
+.category-item.active .delete-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .category-item.active {
-  background-color: white;
-  color: red;
+  font-size: 30px;
+  padding: 15px 40px;
+  border-bottom-color: white;
 }
 
 .btn {
@@ -337,6 +387,34 @@ body {
   justify-content: space-between;
   border-bottom: 1px solid var(--color-primary-20);
 }
+.edit-input {
+  font-size: 60px;
+  width: 80%;
+  outline: none;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+}
+.edit-input:focus {
+  outline: none;
+  border: none;
+}
+
+.removing {
+  animation: removed-item-animation 0.6s cubic-bezier(0.55, -0.04, 0.91, 0.94)
+    forwards;
+}
+
+@keyframes removed-item-animation {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
 
 .task {
   font-size: 20px;
@@ -345,8 +423,8 @@ body {
   font-size: 20px;
   font-family: var(--font-family);
   border: none;
-  background-color: var(--color-primary-10);
-  color: blue;
+  /* background-color: var(--color-primary-10); */
+  color: var(--color-text-muted);
 }
 .editing-task-input:focus {
   outline: none; /* ✅ removes blue border on focus */
@@ -441,7 +519,27 @@ body {
 .category-wrapper.active {
   right: 0;
 }
+.category-title {
+  overflow: clip;
+  width: 80%;
+}
 
+.categories-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.categories {
+  /* list-style: none; */
+  display: flex;
+  /* flex: 1; */
+  height: 100%;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 .title-wrapper::after {
   content: "";
   position: absolute;
@@ -450,6 +548,14 @@ body {
   width: 90%;
   height: 2px;
   background-color: var(--color-primary);
+}
+
+.head-close {
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  cursor: pointer;
 }
 
 /* Animation */

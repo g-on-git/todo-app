@@ -26,9 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById("toggleCategoryBtn");
   const closeCategoryBtn = document.querySelector(".closeCatBtn");
   const categoryWrapper = document.querySelector(".category-wrapper");
-  const categoryTitle = document.querySelector(".category-title");
+  let categoryTitle = document.querySelector(".category-title");
   const taskWrapper = document.querySelector(".task-wrapper");
-
+  const editCategoryBtn = document.querySelector(".edit-category-btn");
+  const checkBtn = document.querySelector(".check");
   const sideAddCat = document.querySelector(".side-category-btn");
 
   const tabButtons = document.querySelectorAll(".tab");
@@ -66,14 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!activeCategory && categoryKeys.length > 0) {
       activeCategory = categoryKeys[0]; // ✅ Default to first category
     }
-    console.log(activeCategory);
     categoryTitle.textContent = activeCategory;
 
     for (let category in todo) {
       const li = document.createElement("li");
       li.classList.add("category-item");
       // li.innerHTML = `${category}`;
-      li.innerHTML = `<span class="category">${category}</span> <button class="delete-btn">Delete</button><button class="edit-category-btn">Edit</button>`;
+      li.innerHTML = `<span class="category">${category}</span> <img class="delete-btn" src="/assets/trash.svg" alt="">`;
       li.querySelector(".delete-btn").addEventListener("click", (e) => {
         e.stopPropagation();
         delete todo[category];
@@ -87,38 +87,108 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTasks();
       });
 
-      li.querySelector(".edit-category-btn").addEventListener("click", (e) => {
-        const btn = e.target;
-        console.log(btn.textContent);
+      editCategoryBtn.addEventListener("click", () => {
+        // Re-query the category title each time
+        const categoryTitle = document.querySelector(".category-title");
 
-        if (btn.textContent === "Edit") {
-          btn.textContent = "Save";
-          const newInput = document.createElement("input");
-          const span = li.querySelector("span");
-          newInput.type = "text";
-          newInput.value = span.textContent;
-          span.replaceWith(newInput);
-        } else if (btn.textContent === "Save") {
-          btn.textContent = "Edit";
-          const input = li.querySelector("input");
-          const span = document.createElement("span");
-          const tasks = todo[category];
-          delete todo[category];
-          todo[input.value] = tasks;
-          span.textContent = input.value;
+        // --- Switch to edit mode ---
+        const newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.value = categoryTitle?.textContent; // set value from current text
+        newInput.classList.add("edit-input");
 
-          if (activeCategory === category) {
-            activeCategory = input.value;
-          }
+        categoryTitle.replaceWith(newInput);
 
-          input.replaceWith(span);
-          saveLocal();
-          renderCategory();
-        }
+        // Show check, hide edit
+        checkBtn.classList.remove("d-none");
+        editCategoryBtn.classList.add("d-none");
+
+        newInput.focus();
       });
-      if (category === activeCategory) {
-        li.classList.add("active");
+
+      // Save when user clicks check
+      checkBtn.addEventListener("click", () => {
+        const input = document.querySelector(".edit-input"); // always re-query
+        const newValue = input.value.trim();
+        const oldValue = activeCategory;
+        if (!newValue) return;
+        if (newValue === oldValue) {
+          // Replace input with H1
+          const h1 = document.createElement("h1");
+          h1.classList.add("category-title");
+          h1.textContent = newValue;
+          input.replaceWith(h1);
+
+          // Toggle buttons back
+          checkBtn.classList.add("d-none");
+          editCategoryBtn.classList.remove("d-none");
+
+          return;
+        }
+
+        // Update todo object
+        if (todo[activeCategory]) {
+          todo[newValue] = todo[activeCategory];
+          delete todo[activeCategory];
+          activeCategory = newValue;
+        }
+
+        // Replace input with H1
+        const h1 = document.createElement("h1");
+        h1.classList.add("category-title");
+        h1.textContent = newValue;
+        input.replaceWith(h1);
+
+        checkBtn.classList.add("d-none");
+        editCategoryBtn.classList.remove("d-none");
+
+        saveLocal();
+        renderCategory();
         renderTasks();
+      });
+
+      // li.querySelector(".edit-category-btn").addEventListener("click", (e) => {
+      //   const btn = e.target;
+      //   console.log(btn.textContent);
+
+      //   if (btn.textContent === "Edit") {
+      //     btn.textContent = "Save";
+      //     const newInput = document.createElement("input");
+      //     const span = li.querySelector("span");
+      //     newInput.type = "text";
+      //     newInput.value = span.textContent;
+      //     span.replaceWith(newInput);
+      //   } else if (btn.textContent === "Save") {
+      //     btn.textContent = "Edit";
+      //     const input = li.querySelector("input");
+      //     const span = document.createElement("span");
+      //     const tasks = todo[category];
+      //     delete todo[category];
+      //     todo[input.value] = tasks;
+      //     span.textContent = input.value;
+
+      //     if (activeCategory === category) {
+      //       activeCategory = input.value;
+      //     }
+
+      //     input.replaceWith(span);
+      //     saveLocal();
+      //     renderCategory();
+      //   }
+      // });
+
+      // if (category === activeCategory) {
+      //   li.classList.add("active");
+      //   renderTasks();
+      // }
+
+      if (category === activeCategory) {
+        // Add active class AFTER the element is in the DOM (next frame)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            li.classList.add("active");
+          });
+        });
       }
 
       li.querySelector(".category").addEventListener("click", (e) => {
